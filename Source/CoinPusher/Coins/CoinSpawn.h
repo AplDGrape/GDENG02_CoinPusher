@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+
+#include "Components/BoxComponent.h"
+
 #include "CoinSpawn.generated.h"
 
 UCLASS()
@@ -21,6 +24,31 @@ protected:
 
 public:	
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	//virtual void Tick(float DeltaTime) override;
 
+	//Spawn an actor of specified class
+	UFUNCTION(BlueprintCallable) bool SpawnActor();
+
+	//Spawn using key pressed
+	//virtual void SetupInputComponent(class UInputComponent* PlayerInputComponent) override;
+	//void KeyPressed();
+
+	UFUNCTION(BlueprintCallable) void EnableSpawn(bool Enable);
+
+	void startSpawn();
+	void stopSpawn();
+
+	bool bSpawn;
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool ShouldSpawn = true;
+
+	//Actor class to spawn
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<AActor> ActorClassToBeSpawned;
+
+private:
+	//Box size to spawn actors
+	UPROPERTY(EditDefaultsOnly) UBoxComponent* SpawnBox;
 };

@@ -7,21 +7,82 @@
 ACoinSpawn::ACoinSpawn()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
+	//Setup
+	SpawnBox = CreateDefaultSubobject<UBoxComponent>(TEXT("SpawnBox"));
+	RootComponent = SpawnBox;
 }
 
 // Called when the game starts or when spawned
 void ACoinSpawn::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	//respond to when to spawn
+	//InputComponent->BindAction("EnterSpawn", IE_Pressed, this, &ACoinSpawn::startSpawn);
+	//InputComponent->BindAction("EnterSpawn", IE_Released, this, &ACoinSpawn::stopSpawn);
+
+	//Spawn first
+	//if (ShouldSpawn)
+	//{
+	//	//Function to key pressed
+	//	if (bSpawn)
+	//	{
+	//		true;
+	//	}
+	//	else
+	//	{
+	//		false;
+	//	}
+	//}
 }
 
-// Called every frame
-void ACoinSpawn::Tick(float DeltaTime)
+bool ACoinSpawn::SpawnActor() 
 {
-	Super::Tick(DeltaTime);
+	bool SpawnedActor = false;
 
+	if (ActorClassToBeSpawned)
+	{
+		//Calculate boundary of box
+		FBoxSphereBounds BoxBounds = SpawnBox->CalcBounds(GetActorTransform());
+
+		//Compute random position within box bounds
+		FVector SpawnLocation = BoxBounds.Origin;
+		//origin += negative initial box extent + twice (positive and negative values of bounds) * box extents * rand value
+		SpawnLocation.X += -BoxBounds.BoxExtent.X + 2 * BoxBounds.BoxExtent.X * FMath::Rand();
+		SpawnLocation.Y += -BoxBounds.BoxExtent.Y + 2 * BoxBounds.BoxExtent.Y * FMath::Rand();
+		SpawnLocation.Z += -BoxBounds.BoxExtent.Z + 2 * BoxBounds.BoxExtent.Z * FMath::Rand();
+
+		//Spawn actor at location
+		SpawnedActor = GetWorld()->SpawnActor(ActorClassToBeSpawned, &SpawnLocation) != nullptr;
+	}
+
+	return SpawnedActor;
 }
+
+void ACoinSpawn::startSpawn()
+{
+	bSpawn = true;
+}
+
+void ACoinSpawn::stopSpawn()
+{
+	bSpawn = false;
+}
+
+void ACoinSpawn::EnableSpawn(bool Enable)
+{
+	ShouldSpawn = Enable;
+
+	if (Enable)
+	{
+		SpawnActor();
+	}
+}
+
+//void ACoinSpawn::SetupPlayerInputComponent()
+//{
+//	Super::SetupPlayerInputComponent(PlayerInputComponent);
+//}
 
