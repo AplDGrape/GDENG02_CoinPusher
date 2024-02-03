@@ -24,18 +24,27 @@ void ACoinSpawn::BeginPlay()
 	//InputComponent->BindAction("EnterSpawn", IE_Released, this, &ACoinSpawn::stopSpawn);
 
 	//Spawn first
-	//if (ShouldSpawn)
-	//{
-	//	//Function to key pressed
-	//	if (bSpawn)
-	//	{
-	//		true;
-	//	}
-	//	else
-	//	{
-	//		false;
-	//	}
-	//}
+	if (ShouldSpawn)
+	{
+		ScheduleActorSpawn();
+		////Function to key pressed
+		//if (bSpawn)
+		//{
+		//	true;
+		//}
+		//else
+		//{
+		//	false;
+		//}
+	}
+}
+
+void ACoinSpawn::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	//remove all timers associated with object instance
+	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
 }
 
 bool ACoinSpawn::SpawnActor() 
@@ -61,6 +70,24 @@ bool ACoinSpawn::SpawnActor()
 	return SpawnedActor;
 }
 
+void ACoinSpawn::SpawnActorSchedule()
+{
+	SpawnActor();
+	if (ShouldSpawn)
+	{
+		ScheduleActorSpawn();
+	}
+}
+
+void ACoinSpawn::ScheduleActorSpawn()
+{
+	//compute time offset to spawn
+	float DeltaToNextSpawn = AvgSpawnTime + (-RandomSpawnTimeOffset + 2 * RandomSpawnTimeOffset * FMath::FRand());
+
+	//schedule spawn
+	GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &ACoinSpawn::SpawnActorSchedule, DeltaToNextSpawn, false);
+}
+
 void ACoinSpawn::startSpawn()
 {
 	bSpawn = true;
@@ -71,15 +98,15 @@ void ACoinSpawn::stopSpawn()
 	bSpawn = false;
 }
 
-void ACoinSpawn::EnableSpawn(bool Enable)
-{
-	ShouldSpawn = Enable;
-
-	if (Enable)
-	{
-		SpawnActor();
-	}
-}
+//void ACoinSpawn::EnableSpawn(bool Enable)
+//{
+//	ShouldSpawn = Enable;
+//
+//	if (Enable)
+//	{
+//		SpawnActor();
+//	}
+//}
 
 //void ACoinSpawn::SetupPlayerInputComponent()
 //{

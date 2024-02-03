@@ -22,6 +22,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+
+	void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
 public:	
 	// Called every frame
 	//virtual void Tick(float DeltaTime) override;
@@ -33,7 +36,7 @@ public:
 	//virtual void SetupInputComponent(class UInputComponent* PlayerInputComponent) override;
 	//void KeyPressed();
 
-	UFUNCTION(BlueprintCallable) void EnableSpawn(bool Enable);
+	//UFUNCTION(BlueprintCallable) void EnableSpawn(bool Enable);
 
 	void startSpawn();
 	void stopSpawn();
@@ -48,7 +51,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<AActor> ActorClassToBeSpawned;
 
+	UPROPERTY(EditAnywhere) float AvgSpawnTime = 5.0f;
+
+	UPROPERTY(EditAnywhere) float RandomSpawnTimeOffset = 1.0f;
+
 private:
 	//Box size to spawn actors
 	UPROPERTY(EditDefaultsOnly) UBoxComponent* SpawnBox;
+
+	UFUNCTION() void SpawnActorSchedule();
+
+	void ScheduleActorSpawn();
+
+	FTimerHandle SpawnTimerHandle;
 };
