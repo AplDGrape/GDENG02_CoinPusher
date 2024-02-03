@@ -22,5 +22,26 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pathing", meta = (ExposeOnSpawn = "true", 
+		MakeEditWidget = "true"))
+	TArray<FVector> ThePath;
+
+private:
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MoveActor")
+	//class USceneComponent* RootScene;
+
+
+	UPROPERTY(EditDefaultsOnly, Category = "Components")
+	class UBoxComponent* BoxCollider;
+	UPROPERTY(EditDefaultsOnly, Category = "Components")
+	class UStaticMeshComponent* MyMesh;
+
+	//deals specifically for movement
+	UPROPERTY(EditDefaultsOnly, Category = "Components")
+	class UInterpToMovementComponent* MovementComponent;
+
+	//float RunningTime;
+
+	//UPROPERTY(EditAnywhere, Category = "MoveActor") float Speed;
 
 };
