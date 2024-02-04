@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 
 #include "Components/BoxComponent.h"
+#include "Components/StaticMeshComponent.h"
 
 #include "CoinSpawn.generated.h"
 
@@ -23,45 +24,43 @@ protected:
 	virtual void BeginPlay() override;
 
 
-	void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	//void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:	
 	// Called every frame
-	//virtual void Tick(float DeltaTime) override;
+	virtual void Tick(float DeltaTime) override;
+
+	//Static mesh to render
+	UPROPERTY(EditAnywhere)
+	UStaticMeshComponent* StaticMesh;
 
 	//Spawn an actor of specified class
-	UFUNCTION(BlueprintCallable) bool SpawnActor();
-
-	//Spawn using key pressed
-	//virtual void SetupInputComponent(class UInputComponent* PlayerInputComponent) override;
-	//void KeyPressed();
+	//UFUNCTION(BlueprintCallable) bool SpawnActor();
 
 	//UFUNCTION(BlueprintCallable) void EnableSpawn(bool Enable);
 
-	void startSpawn();
+	/*void startSpawn();
 	void stopSpawn();
 
-	bool bSpawn;
+	bool bSpawn;*/
 
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool ShouldSpawn = true;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//bool ShouldSpawn = true;
 
-	//Actor class to spawn
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<AActor> ActorClassToBeSpawned;
+	////Actor class to spawn
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//TSubclassOf<AActor> ActorClassToBeSpawned;
 
-	UPROPERTY(EditAnywhere) float AvgSpawnTime = 5.0f;
+	//UPROPERTY(EditAnywhere) float AvgSpawnTime = 5.0f;
 
-	UPROPERTY(EditAnywhere) float RandomSpawnTimeOffset = 1.0f;
+	//UPROPERTY(EditAnywhere) float RandomSpawnTimeOffset = 1.0f;
 
-private:
 	//Box size to spawn actors
-	UPROPERTY(EditDefaultsOnly) UBoxComponent* SpawnBox;
+	/*UPROPERTY(EditDefaultsOnly) UBoxComponent* SpawnBox;
 
 	UFUNCTION() void SpawnActorSchedule();
 
 	void ScheduleActorSpawn();
 
-	FTimerHandle SpawnTimerHandle;
+	FTimerHandle SpawnTimerHandle;*/
 };

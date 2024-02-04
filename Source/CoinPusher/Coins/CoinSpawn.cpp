@@ -7,11 +7,15 @@
 ACoinSpawn::ACoinSpawn()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
+
+	//create root component to render
+	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
+	RootComponent = StaticMesh;
 
 	//Setup
-	SpawnBox = CreateDefaultSubobject<UBoxComponent>(TEXT("SpawnBox"));
-	RootComponent = SpawnBox;
+	/*SpawnBox = CreateDefaultSubobject<UBoxComponent>(TEXT("SpawnBox"));
+	RootComponent = SpawnBox;*/
 }
 
 // Called when the game starts or when spawned
@@ -24,79 +28,85 @@ void ACoinSpawn::BeginPlay()
 	//InputComponent->BindAction("EnterSpawn", IE_Released, this, &ACoinSpawn::stopSpawn);
 
 	//Spawn first
-	if (ShouldSpawn)
-	{
-		ScheduleActorSpawn();
-		////Function to key pressed
-		//if (bSpawn)
-		//{
-		//	true;
-		//}
-		//else
-		//{
-		//	false;
-		//}
-	}
+	//if (ShouldSpawn)
+	//{
+	//	ScheduleActorSpawn();
+	//	////Function to key pressed
+	//	//if (bSpawn)
+	//	//{
+	//	//	true;
+	//	//}
+	//	//else
+	//	//{
+	//	//	false;
+	//	//}
+	//}
 }
 
-void ACoinSpawn::EndPlay(const EEndPlayReason::Type EndPlayReason)
+// Called every frame
+void ACoinSpawn::Tick(float DeltaTime)
 {
-	Super::EndPlay(EndPlayReason);
-
-	//remove all timers associated with object instance
-	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
+	Super::Tick(DeltaTime);
 }
 
-bool ACoinSpawn::SpawnActor() 
-{
-	bool SpawnedActor = false;
+//void ACoinSpawn::EndPlay(const EEndPlayReason::Type EndPlayReason)
+//{
+//	Super::EndPlay(EndPlayReason);
+//
+//	//remove all timers associated with object instance
+//	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
+//}
 
-	if (ActorClassToBeSpawned)
-	{
-		//Calculate boundary of box
-		FBoxSphereBounds BoxBounds = SpawnBox->CalcBounds(GetActorTransform());
+//bool ACoinSpawn::SpawnActor() 
+//{
+//	bool SpawnedActor = false;
+//
+//	if (ActorClassToBeSpawned)
+//	{
+//		//Calculate boundary of box
+//		FBoxSphereBounds BoxBounds = SpawnBox->CalcBounds(GetActorTransform());
+//
+//		//Compute random position within box bounds
+//		FVector SpawnLocation = BoxBounds.Origin;
+//		//origin += negative initial box extent + twice (positive and negative values of bounds) * box extents * rand value
+//		SpawnLocation.X += -BoxBounds.BoxExtent.X + 2 * BoxBounds.BoxExtent.X * FMath::Rand();
+//		SpawnLocation.Y += -BoxBounds.BoxExtent.Y + 2 * BoxBounds.BoxExtent.Y * FMath::Rand();
+//		SpawnLocation.Z += -BoxBounds.BoxExtent.Z + 2 * BoxBounds.BoxExtent.Z * FMath::Rand();
+//
+//		//Spawn actor at location
+//		SpawnedActor = GetWorld()->SpawnActor(ActorClassToBeSpawned, &SpawnLocation) != nullptr;
+//	}
+//
+//	return SpawnedActor;
+//}
+//
+//void ACoinSpawn::SpawnActorSchedule()
+//{
+//	SpawnActor();
+//	if (ShouldSpawn)
+//	{
+//		ScheduleActorSpawn();
+//	}
+//}
+//
+//void ACoinSpawn::ScheduleActorSpawn()
+//{
+//	//compute time offset to spawn
+//	float DeltaToNextSpawn = AvgSpawnTime + (-RandomSpawnTimeOffset + 2 * RandomSpawnTimeOffset * FMath::FRand());
+//
+//	//schedule spawn
+//	GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &ACoinSpawn::SpawnActorSchedule, DeltaToNextSpawn, false);
+//}
 
-		//Compute random position within box bounds
-		FVector SpawnLocation = BoxBounds.Origin;
-		//origin += negative initial box extent + twice (positive and negative values of bounds) * box extents * rand value
-		SpawnLocation.X += -BoxBounds.BoxExtent.X + 2 * BoxBounds.BoxExtent.X * FMath::Rand();
-		SpawnLocation.Y += -BoxBounds.BoxExtent.Y + 2 * BoxBounds.BoxExtent.Y * FMath::Rand();
-		SpawnLocation.Z += -BoxBounds.BoxExtent.Z + 2 * BoxBounds.BoxExtent.Z * FMath::Rand();
-
-		//Spawn actor at location
-		SpawnedActor = GetWorld()->SpawnActor(ActorClassToBeSpawned, &SpawnLocation) != nullptr;
-	}
-
-	return SpawnedActor;
-}
-
-void ACoinSpawn::SpawnActorSchedule()
-{
-	SpawnActor();
-	if (ShouldSpawn)
-	{
-		ScheduleActorSpawn();
-	}
-}
-
-void ACoinSpawn::ScheduleActorSpawn()
-{
-	//compute time offset to spawn
-	float DeltaToNextSpawn = AvgSpawnTime + (-RandomSpawnTimeOffset + 2 * RandomSpawnTimeOffset * FMath::FRand());
-
-	//schedule spawn
-	GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &ACoinSpawn::SpawnActorSchedule, DeltaToNextSpawn, false);
-}
-
-void ACoinSpawn::startSpawn()
-{
-	bSpawn = true;
-}
-
-void ACoinSpawn::stopSpawn()
-{
-	bSpawn = false;
-}
+//void ACoinSpawn::startSpawn()
+//{
+//	bSpawn = true;
+//}
+//
+//void ACoinSpawn::stopSpawn()
+//{
+//	bSpawn = false;
+//}
 
 //void ACoinSpawn::EnableSpawn(bool Enable)
 //{
